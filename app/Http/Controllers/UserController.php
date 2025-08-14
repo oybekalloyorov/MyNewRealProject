@@ -30,4 +30,40 @@ class UserController extends Controller
             ], 409);
         }
     }
+
+    //Update
+    public function update(Request $request){
+        $user = User::where('phone', $request['phone'])->first();
+        // dd($user->id);
+        if (!$user){
+            return response()->json([
+                'message' => 'Bunday telefon raqam bilan foydalanuvchi topilmadi!'
+            ]);
+        }
+
+        // dd($request);
+        //validate
+        $fields = $request->validate([
+            'phone' => 'required|unique:users,phone,'.$user->id,
+            'firstname' => 'required|max:255',
+            'lastname' => 'required|max:255',
+            'password' => 'required|min:6'
+        ]);
+
+        $user->update([
+            'phone' => $fields['phone'],
+            'firstname' => $fields['firstname'],
+            'lastname' => $fields['lastname'],
+            'password' => Hash::make($fields['password']),
+        ]);
+
+        //token
+        $token = $user->createToken('auth-token')->plainTextToken;
+
+        return response()->json([
+            'user' => $user,
+            'token' => $token,
+            'updated' => 'Malumotlaringiz muvaffaqiyatli o\'zgartirildi!'
+        ]);
+    }
 }

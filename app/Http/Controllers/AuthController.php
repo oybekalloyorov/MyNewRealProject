@@ -9,12 +9,20 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
+        // 1 savol javob
+        if (User::where('phone', $request['phone'])->exists()) {
+            return response()->json([
+                'message' => 'Bu raqam bilan oldin ro‘yxatdan o‘tilgan'
+        ], 409);
+        }
+
         $fields = $request->validate([
             'phone' => 'required|string|unique:users,phone',
             'firstname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
             'password' => 'required|string|min:6',
         ]);
+
 
         $user = User::create([
             'phone' => $fields['phone'],

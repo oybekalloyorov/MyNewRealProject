@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ApiResponse;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -36,9 +37,7 @@ class UserController extends Controller
         $user = User::where('phone', $request['phone'])->first();
         // dd($user->id);
         if (!$user){
-            return response()->json([
-                'message' => 'Bunday telefon raqam bilan foydalanuvchi topilmadi!'
-            ]);
+            return ApiResponse::error('Bunday telefon raqam bilan foydalanuvchi topilmadi!', 500);
         }
 
         // dd($request);
@@ -60,10 +59,6 @@ class UserController extends Controller
         //token
         $token = $user->createToken('auth-token')->plainTextToken;
 
-        return response()->json([
-            'user' => $user,
-            'token' => $token,
-            'updated' => 'Malumotlaringiz muvaffaqiyatli o\'zgartirildi!'
-        ]);
+        return ApiResponse::success('Malumotlaringiz muvaffaqiyatli o\'zgartirildi!');
     }
 }

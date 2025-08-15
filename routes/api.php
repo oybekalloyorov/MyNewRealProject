@@ -13,6 +13,6 @@ Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logo
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::put('/reset-password',[UserController::class, 'reset_password']);
-    Route::put('/update',[UserController::class, 'update']);
+    Route::put('/reset-password',[AuthController::class, 'reset_password']);
+    Route::put('/update',[AuthController::class, 'update']);
 });
